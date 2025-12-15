@@ -17,10 +17,20 @@ async function init(){
     const res = await fetch('personas.json');
     state.systemPrompts = await res.json();
   } catch(e){
+    // Configuración por defecto si no existe personas.json
     state.systemPrompts = {
-      "chat-boy-ea": { "prompt": "Carismático, directo, juguetón pero respetuoso.", "intro": "👋 Hola, soy Chat Boy de EA. Estoy aquí para charlar contigo con estilo." },
-      "crush-ea": { "prompt": "Tono cercano, dulce, con curiosidad genuina.", "intro": "Hola, soy Crush on EA, ¿me cuentas algo de ti?" },
-      "spicy-ea": { "prompt": "Coqueteo ligero y humor sutil.", "intro": "Spicy EA aquí, ¿listo para un poco de picante?" }
+      "chat-boy-ea": { 
+        "prompt": "Carismático, directo, juguetón pero respetuoso.", 
+        "intro": "👋 Hola, soy Chat Boy de EA. Estoy aquí para charlar contigo con estilo." 
+      },
+      "crush-ea": { 
+        "prompt": "Tono cercano, dulce, con curiosidad genuina.", 
+        "intro": "Hola, soy Crush on EA, ¿me cuentas algo de ti?" 
+      },
+      "spicy-ea": { 
+        "prompt": "Coqueteo ligero y humor sutil.", 
+        "intro": "Spicy EA aquí, ¿listo para un poco de picante?" 
+      }
     };
   }
 
@@ -99,7 +109,8 @@ formEl.addEventListener('submit', async (e)=>{
   const personaPrompt = state.systemPrompts[state.persona].prompt;
   const reply = simulateReply(text, personaPrompt);
 
-  await delay(600 + Math.random()*400);
+  // Espera para simular escritura
+  await delay(1000 + Math.random()*500);
   loader.remove();
   pushBot(reply);
 });
@@ -118,4 +129,23 @@ function simulateReply(userText, personaPrompt){
   const closers = [
     "¿Te sirve así?",
     "¿Quieres que lo llevemos más allá?",
-    "¿
+    "¿Qué parte quieres afinar?",
+    "Puedo darte un paso a paso si quieres."
+  ];
+  const closer = closers[Math.floor(Math.random()*closers.length)];
+
+  return `${tone} ${short}. ${closer}`;
+}
+
+function pickTone(prompt){
+  if(prompt.includes('Carismático')) return "😏 Me gusta tu idea.";
+  if(prompt.includes('dulce')) return "✨ Qué bonito lo que propones.";
+  if(prompt.includes('Coqueteo')) return "🔥 Ok, juguemos con eso.";
+  return "Vale, te sigo.";
+}
+
+function smartShorten(text){
+  if(text.length <= 120) return text;
+  const cut = text.slice(0, 110);
+  return cut.slice(0, cut.lastIndexOf(' ')) + "…";
+}
