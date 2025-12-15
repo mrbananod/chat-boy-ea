@@ -1,4 +1,3 @@
-// script.js
 const chatEl = document.getElementById('chat');
 const formEl = document.getElementById('inputForm');
 const inputEl = document.getElementById('userInput');
@@ -14,23 +13,20 @@ let state = {
 init();
 
 async function init(){
-  // Carga personas
   try {
     const res = await fetch('personas.json');
     state.systemPrompts = await res.json();
   } catch(e){
     state.systemPrompts = {
-      "chat-boy-ea": "Eres Chat Boy de EA: carismático, directo, juguetón pero respetuoso. Hablas en español con vibra latina, breve y con intención.",
-      "crush-ea": "Eres Crush on EA: tono cercano, dulce, con curiosidad genuina. Evitas clichés, mantienes elegancia.",
-      "spicy-ea": "Eres Spicy EA: coqueteo ligero y humor sutil, nunca explícito. Estilo ágil, respuestas cortas."
+      "chat-boy-ea": { "prompt": "Carismático, directo, juguetón pero respetuoso.", "intro": "👋 Hola, soy Chat Boy de EA. Estoy aquí para charlar contigo con estilo." },
+      "crush-ea": { "prompt": "Tono cercano, dulce, con curiosidad genuina.", "intro": "Hola, soy Crush on EA, ¿me cuentas algo de ti?" },
+      "spicy-ea": { "prompt": "Coqueteo ligero y humor sutil.", "intro": "Spicy EA aquí, ¿listo para un poco de picante?" }
     };
   }
 
-  // Render inicial
   renderAll();
-  // Mensaje de bienvenida si no hay historial
   if(state.history.length === 0){
-    pushBot("Hola, soy Chat Boy de EA. ¿Qué quieres explorar hoy?");
+    pushBot(state.systemPrompts[state.persona].intro);
   }
 }
 
@@ -100,8 +96,7 @@ formEl.addEventListener('submit', async (e)=>{
 
   const loader = showTyping();
 
-  // Simulación de respuesta con estilo de persona
-  const personaPrompt = state.systemPrompts[state.persona] || '';
+  const personaPrompt = state.systemPrompts[state.persona].prompt;
   const reply = simulateReply(text, personaPrompt);
 
   await delay(600 + Math.random()*400);
@@ -111,45 +106,16 @@ formEl.addEventListener('submit', async (e)=>{
 
 personaSel.addEventListener('change', ()=>{
   state.persona = personaSel.value;
-  pushBot(`Modo cambiado a: ${personaSel.options[personaSel.selectedIndex].text}. ¿Seguimos?`);
+  pushBot(state.systemPrompts[state.persona].intro);
 });
 
 function delay(ms){ return new Promise(res=>setTimeout(res, ms)); }
 
-// Simulador simple: reacciona con intención, reformula y hace una pregunta breve
 function simulateReply(userText, personaPrompt){
   const tone = pickTone(personaPrompt);
-  const intent = extractIntent(userText);
   const short = smartShorten(userText);
 
   const closers = [
     "¿Te sirve así?",
     "¿Quieres que lo llevemos más allá?",
-    "¿Qué parte quieres afinar?",
-    "Puedo darte un paso a paso si quieres."
-  ];
-  const closer = closers[Math.floor(Math.random()*closers.length)];
-
-  return `${tone} ${short}. ${intent ? intent+' ' : ''}${closer}`;
-}
-
-function pickTone(prompt){
-  if(prompt.includes('carismático')) return "Mmm, me gusta tu idea.";
-  if(prompt.includes('dulce')) return "Qué bonito lo que propones.";
-  if(prompt.includes('coqueteo')) return "Ok, juguemos con eso.";
-  return "Vale, te sigo.";
-}
-
-function extractIntent(text){
-  const t = text.toLowerCase();
-  if(t.includes('guía') || t.includes('cómo')) return "Te doy una guía clara.";
-  if(t.includes('idea') || t.includes('concepto')) return "Te propongo un concepto.";
-  if(t.includes('diseño') || t.includes('estilo')) return "Definimos el estilo.";
-  return "";
-}
-
-function smartShorten(text){
-  if(text.length <= 120) return text;
-  const cut = text.slice(0, 110);
-  return cut.slice(0, cut.lastIndexOf(' ')) + "…";
-}
+    "¿
