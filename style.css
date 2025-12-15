@@ -1,11 +1,10 @@
-/* style.css */
 :root{
-  --bg:#0f1115;         /* frío */
+  --bg:#0f1115;
   --panel:#161a22;
   --text:#e7e9ee;
   --muted:#9aa3b2;
-  --accent:#ff7a59;     /* cálido */
-  --accent2:#5cc6ff;    /* frío */
+  --accent:#ff7a59;
+  --accent2:#5cc6ff;
   --bubbleUser:#1f2530;
   --bubbleBot:#171e28;
   --border:#242a36;
