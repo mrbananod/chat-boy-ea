@@ -13,8 +13,12 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; background:var(--bg); color:var(--text); font:16px/1.6 system-ui, Segoe UI, Roboto, Arial;
-  display:flex; flex-direction:column;
+  margin:0; 
+  background:var(--bg); 
+  color:var(--text); 
+  font:16px/1.6 'Poppins', system-ui, Segoe UI, Roboto, Arial;
+  display:flex; 
+  flex-direction:column;
 }
 
 .nav{
@@ -22,10 +26,13 @@ body{
   padding:12px 16px; border-bottom:1px solid var(--border); background:var(--panel);
 }
 .brand{display:flex; align-items:center; gap:10px}
-.brand h1{margin:0; font-size:18px; letter-spacing:0.3px}
-.dot{width:10px; height:10px; border-radius:50%}
-.cold{background:var(--accent2)}
-.warm{background:var(--accent)}
+.brand h1{margin:0; font-size:18px; letter-spacing:0.3px; font-weight:600}
+.logo{
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg, var(--accent2), var(--accent));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:600; color:#111; font-family:'Poppins', sans-serif;
+}
 
 .container{max-width:800px; margin:0 auto; width:100%; padding:12px; flex:1; display:flex; flex-direction:column}
 
